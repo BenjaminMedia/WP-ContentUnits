@@ -1,7 +1,7 @@
 {
-  "name": "benjaminmedia/WP-ContentUnits",
+  "name": "benjaminmedia/wp-content-units ",
   "type": "wordpress-plugin",
-  "homepage": "https://github.com/BenjaminMedia/WP-ContentUnits",
+  "homepage": "https://github.com/BenjaminMedia/wp-content-units",
   "license": "GPLv3",
   "description": "A plugin that allows you to manually add Specific Content Units to WordPress",
   "keywords": ["plugin"],
