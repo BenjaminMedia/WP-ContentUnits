@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WordPress Manual Content Units
+Plugin Name: WordPress Manual Content Units v2
 Plugin URI: https://github.com/BenjaminMedia/wp-manual-cu
 Description: Plugin that allows you to manually add Specific Content Units to WordPress
 Author: Frederik Rabøl & Alf Henderson
