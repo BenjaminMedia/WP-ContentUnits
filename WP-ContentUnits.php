@@ -8,9 +8,11 @@ Version: 2.0
 Author URI: http://www.bonnierpublications.com
 */
 
-include_once('bannerPlugin.php');
-include_once('BannerGroup.php');
-include_once('Banner.php');
+$directory = plugin_dir_path(__FILE__);
+
+include_once($directory.'bannerPlugin.php');
+include_once($directory.'BannerGroup.php');
+include_once($directory.'Banner.php');
 
 const HOOK_DEFAULT_MIDDLE = 'headway_after_entry_content';
 const HOOK_DEFAULT_HORSESHOE = 'headway_page_start';
