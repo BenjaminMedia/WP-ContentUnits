@@ -11,7 +11,7 @@ Author URI: http://www.bonnierpublications.com
 $directory = plugin_dir_path(__FILE__);
 
 include_once($directory.'bannerPlugin.php');
-include_once($directory.'BannerGroup.php');
+include_once($directory.'bannerGroup.php');
 include_once($directory.'Banner.php');
 
 const HOOK_DEFAULT_MIDDLE = 'headway_after_entry_content';
