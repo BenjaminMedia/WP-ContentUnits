@@ -34,7 +34,7 @@ class Banner
 
     private function createBannerCode($cu, $breakpoint, $type, $sticky, $offset = 0)
     {
-        $wallpaperBanner = ($type == 'wallpaper') ? 'data-wallpaper-banner' : '';
+        $wallpaperBanner = ($type == 'wallpaper') ? 'data-wallpaper-banner id="wallpaper"' : '';
         if (isset($type, $this->bannerTypes)) {
             if (($type == ('banner' || 'wallpaper')) && isset($breakpoint, $this->bannerBreakpoints)) {
                 $bannerBreakpoint = $this->bannerBreakpoints[$breakpoint];
