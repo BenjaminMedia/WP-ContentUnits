@@ -277,7 +277,7 @@ HTML;
         $htmlPanel =
             "<div class='panel panel-info'>
                 <div class='panel-heading'>
-                    <h3 class='panel-title'>'.$title.'</h3>
+                    <h3 class='panel-title'>$title</h3>
                 </div>
                 <div class='panel-body'>
                 $inputForms
@@ -288,17 +288,17 @@ HTML;
     }
 
     private function generateBannerGroupForm($title,$namespace,$array){
-
-        $htmlForm = '
-        <div class="col-xs-12">
-            <div class="col-xs-6 col-sm-4">
-                <label>'.$title.'</label>
+        $bannerGroups = $this->generateBannerGroupInputs($namespace,$array);
+        $htmlForm = "
+        <div class='col-xs-12'>
+            <div class='col-xs-6 col-sm-4'>
+                <label>$title</label>
             </div>
-            <div class="col-xs-12 col-sm-8">
-                <div class="form-group">'.$this->generateBannerGroupInputs($namespace,$array).'</div>
+            <div class='col-xs-12 col-sm-8'>
+                <div class='form-group'>$bannerGroups</div>
             </div>
         </div>
-        ';
+        ";
 
         return $htmlForm;
     }
