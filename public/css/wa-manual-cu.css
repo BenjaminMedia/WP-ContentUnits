@@ -257,3 +257,19 @@
         display: none;
     }
 }
+
+/* Fixes for Headway Blogs*/
+
+.entry-row .banner {
+ float: left;
+}
+
+.block-content, .block-type-content, .loop, .entry-row .banner {
+    overflow: visible;
+}
+
+@media(min-width: 768px){
+    #footer-banners .col-sm-12 {
+        padding: 0;
+    }
+}
