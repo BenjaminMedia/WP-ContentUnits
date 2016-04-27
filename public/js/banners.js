@@ -233,15 +233,23 @@
 
     Banners.prototype.adBlockDetection = function(adsAreLoaded) {
       if (adsAreLoaded) {
-        dataLayer.push({
-          'event': 'ads-are-loaded',
-          'top-banner-load-time': Date.now() - this.startTime
-        });
+        if (typeof dataLayer !== "undefined") {
+          dataLayer.push({
+            'event': 'ads-are-loaded',
+            'top-banner-load-time': Date.now() - this.startTime
+          });
+        } else {
+          console.info("Google Analytics dataLayer has not been detected.");
+        }
         return console.info("Ads are loaded", Date.now() - this.startTime);
       } else {
-        dataLayer.push({
-          'event': 'ads-are-blocked'
-        });
+        if (typeof dataLayer !== "undefined") {
+          dataLayer.push({
+            'event': 'ads-are-blocked'
+          });
+        } else {
+          console.info("Google Analytics dataLayer has not been detected.");
+        }
         return console.error("Ads are blocked");
       }
     };

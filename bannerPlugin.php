@@ -26,7 +26,7 @@ class BannerPlugin{
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
             if ($this->getOptionOrDefault('load-eas-functions', false)) {
-                wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/emediate-functions.js');
+                wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js');
             }
             wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
             wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
@@ -105,9 +105,9 @@ class BannerPlugin{
     }
 
     public function middleBanners(){
-        $desktopMiddle = $this->getOptionOrDefault('desktop-middle');
-        $tabletMiddle = $this->getOptionOrDefault('tablet-middle');
-        $mobileMiddle = $this->getOptionOrDefault('mobile-middle');
+        $desktopMiddle = $this->getOptionOrDefault('desktop-middle', $this->getOptionOrDefault('middle-desktop'));
+        $tabletMiddle = $this->getOptionOrDefault('tablet-middle', $this->getOptionOrDefault('middle-tablet'));
+        $mobileMiddle = $this->getOptionOrDefault('mobile-middle', $this->getOptionOrDefault('middle-mobile'));
         $postsBetweenBanners = $this->getOptionOrDefault('posts-between-banners', 1);
         $postsBeforeBanners = $this->getOptionOrDefault('posts-before-banners', 0);
 
@@ -116,22 +116,22 @@ class BannerPlugin{
         $this->postCount++;
         if($this->postCount >= $postsBeforeBanners){
             if( (($this->postCount % $postsBetweenBanners++) == 0) && ($maxPostsPerPage > $this->postCount)) {
-                echo BannerGroup::htmlCodeFromProps('Middle Banners',
-                    [
-                        'banners' => [
-                            'lg'=>$desktopMiddle,
-                            'sm'=>$tabletMiddle,
-                            'xs'=>$mobileMiddle,
-                        ]
-                    ],'banner_group');
+            echo BannerGroup::htmlCodeFromProps('Middle Banners',
+                [
+                    'banners' => [
+                        'lg'=>$desktopMiddle,
+                        'sm'=>$tabletMiddle,
+                        'xs'=>$mobileMiddle,
+                    ]
+                ],'banner_group');
             }
         }
     }
 
     public function footerBanners(){
-    $footerDesktop = $this->getOptionOrDefault('desktop-footer');
-    $footerTablet = $this->getOptionOrDefault('tablet-footer');
-    $footerMobile = $this->getOptionOrDefault('mobile-footer');
+    $footerDesktop = $this->getOptionOrDefault('desktop-footer',$this->getOptionOrDefault('footer-desktop'));
+    $footerTablet = $this->getOptionOrDefault('tablet-footer', $this->getOptionOrDefault('footer-tablet'));
+    $footerMobile = $this->getOptionOrDefault('mobile-footer', $this->getOptionOrDefault('footer-mobile'));
 
     $footerBannerGroup = BannerGroup::htmlCodeFromProps('Footer Banners',
         [
@@ -142,15 +142,14 @@ class BannerPlugin{
             ]
         ],'banner_group');
 
-    $output =
-        "<div class='row' id='footer-banners'>
+    
+    echo "<div class='row' id='footer-banners'>
             <div class='col-sm-12'>
                 $footerBannerGroup
                 <div class='clearfix'></div>
             </div>
         </div>";
 
-    echo $output;
     }
 
     public function settingsPage(){
@@ -220,7 +219,7 @@ class BannerPlugin{
         $metaForm = $this->generateOptionPanel('General Settings', [
             'title' => 'General',
             'forms' => [
-                self::generateBannerGroupForm('is this site using Shell?','load',[
+                self::generateBannerGroupForm('Load Emediate functions?<br /> <small>(Only set to \'1\' if the site is not using a WhiteAlbum Shell)</small>','load',[
                     'eas-functions' => 'columns',
                 ]),
                 self::generateBannerGroupForm('Posts Before first Banner','posts',[
