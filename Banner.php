@@ -38,7 +38,8 @@ class Banner
         if (isset($type, $this->bannerTypes)) {
             if (($type == ('banner' || 'wallpaper')) && isset($breakpoint, $this->bannerBreakpoints)) {
                 $bannerBreakpoint = $this->bannerBreakpoints[$breakpoint];
-                $stickyAttr = ($sticky) ? "class=\"fixed text-center static\" data-listen=\"sticky-banner\" data-offset=\"$offset\"" : '';
+                $offsetAttr = ($offset > 0)? "data-offset=\"$offset\"":'';
+                $stickyAttr = ($sticky) ? "class=\"fixed text-center static\" data-listen=\"sticky-banner\" $offsetAttr" : '';
                 return "<div class='banner visible-$bannerBreakpoint gtm-banner' data-banner-$bannerBreakpoint $wallpaperBanner $stickyAttr>
                         <div class='banner-min-height banner gtm-banner' data-banner-code='$cu' data-banner-target='true'></div>
                     </div>";
@@ -46,7 +47,7 @@ class Banner
             if ($type == 'sidebanner') {
                 $stickyAttr = ($sticky) ? 'class="fixed text-center static" data-listen="sticky-banner"' : 'class="absolute text-center"';
                 $banner =
-                    "<div $stickyAttr data-offset='$offset'>
+                    "<div $stickyAttr>
                         <div class='banner-min-height banner gtm-banner' data-banner-code='$cu' data-banner-target='true' id='banner-$cu'></div>
                     </div>";
                 return $banner;
