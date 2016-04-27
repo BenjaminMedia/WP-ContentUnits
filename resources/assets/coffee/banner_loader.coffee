@@ -169,13 +169,19 @@ class Banners
 
   adBlockDetection: (adsAreLoaded) ->
     if adsAreLoaded
-      dataLayer.push
-        'event' : 'ads-are-loaded'
-        'top-banner-load-time' : Date.now() - @startTime
+      if typeof dataLayer != "undefined"
+        dataLayer.push
+          'event' : 'ads-are-loaded'
+          'top-banner-load-time' : Date.now() - @startTime
+      else
+        console.info "Google Analytics dataLayer has not been detected.";
 
       console.info "Ads are loaded", Date.now() - @startTime
     else
-      dataLayer.push({ 'event' : 'ads-are-blocked' })
+      if typeof dataLayer != "undefined"
+        dataLayer.push({ 'event' : 'ads-are-blocked' })
+      else
+        console.info "Google Analytics dataLayer has not been detected.";
       console.error "Ads are blocked"
 
 window.Banners = new Banners()
