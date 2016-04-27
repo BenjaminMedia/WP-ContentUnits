@@ -18,7 +18,7 @@ class Banner
     {
         $this->bannerBreakpoints = self::getBannerBreakpoints();
         if (isset($contentUnit)) {
-            $this->code = $this->createBannerCode($contentUnit, $breakpoint, $type, $sticky);
+            $this->code = $this->createBannerCode($contentUnit, $breakpoint, $type, $sticky, $offset);
         }
     }
 
@@ -32,13 +32,14 @@ class Banner
         ];
     }
 
-    private function createBannerCode($cu, $breakpoint, $type, $sticky, $offset = 0)
+    private function createBannerCode($cu, $breakpoint, $type, $sticky= false, $offset = 0)
     {
         $wallpaperBanner = ($type == 'wallpaper') ? 'data-wallpaper-banner id="wallpaper"' : '';
         if (isset($type, $this->bannerTypes)) {
             if (($type == ('banner' || 'wallpaper')) && isset($breakpoint, $this->bannerBreakpoints)) {
                 $bannerBreakpoint = $this->bannerBreakpoints[$breakpoint];
-                return "<div class='banner visible-$bannerBreakpoint gtm-banner' data-banner-$bannerBreakpoint $wallpaperBanner>
+                $stickyAttr = ($sticky) ? "class=\"fixed text-center static\" data-listen=\"sticky-banner\" data-offset=\"$offset\"" : '';
+                return "<div class='banner visible-$bannerBreakpoint gtm-banner' data-banner-$bannerBreakpoint $wallpaperBanner $stickyAttr>
                         <div class='banner-min-height banner gtm-banner' data-banner-code='$cu' data-banner-target='true'></div>
                     </div>";
             }

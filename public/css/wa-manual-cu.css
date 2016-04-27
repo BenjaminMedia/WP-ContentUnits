@@ -27,11 +27,6 @@
     margin: 0 auto;
 }
 
-.fixed {
-    position: fixed;
-    top: 0;
-}
-
 .banner img {
     max-width: 100%;
 }
@@ -73,6 +68,11 @@
     margin-top: 1200px !important;
     top: 0px;
     position: absolute;
+}
+
+.fixed, .horseshoe .horseshoe-container .fixed{
+    position: fixed;
+    top: 0;
 }
 
 .left,  .modal .close,  .horseshoe .horseshoe-container .side-banner.banner-left {
