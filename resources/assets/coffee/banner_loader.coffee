@@ -99,7 +99,7 @@ class Banners
 
     if category? then categoryParams = "&cat=#{category}" else categoryParams = ''
 
-    return "cre=mu&js=y&target=_blank&url=#{url}&pageviewid=#{@uuid}" + categoryParams + cxenseParams
+    return "cre=mu&js=y&target=_blank&url=#{url}&pageviewid=#{@uuid}" + categoryParams
 
   placeIframeBanner: ($target, code) ->
     id = "banner-#{Math.floor((Math.random() * 999999999) + 1)}"
