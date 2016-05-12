@@ -150,7 +150,7 @@
       } else {
         categoryParams = '';
       }
-      return ("cre=mu&js=y&target=_blank&url=" + url + "&pageviewid=" + this.uuid) + categoryParams + cxenseParams;
+      return ("cre=mu&js=y&target=_blank&url=" + url + "&pageviewid=" + this.uuid) + categoryParams;
     };
 
     Banners.prototype.placeIframeBanner = function($target, code) {
