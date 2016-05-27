@@ -73,7 +73,6 @@
 .fixed, .horseshoe .horseshoe-container .fixed{
     margin-top: 0 !important;
     position: fixed;
-    top: 0;
 }
 
 .left,  .modal .close,  .horseshoe .horseshoe-container .side-banner.banner-left {
