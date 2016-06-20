@@ -2,7 +2,7 @@
 
 namespace BonnierBannerGroup;
 
-use BonnierBannerPlugin\Banner;
+use BonnierBanner\Banner;
 
 Class BannerGroup
 {

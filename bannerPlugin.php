@@ -39,7 +39,7 @@ class BannerPlugin{
      * @param null $defaultValue
      * @return mixed|null|void
      */
-    public function getOptionOrDefault($option, $defaultValue = NULL) {
+    public static function getOptionOrDefault($option, $defaultValue = NULL) {
         $newHookNamespace = 'ContentUnit-';
         $oldHookNamespace = 'wp-manual-cu-';
         $themeHook = NULL;

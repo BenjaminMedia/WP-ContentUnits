@@ -64,16 +64,16 @@
     top: 0;
 }
 
-.horseshoe .horseshoe-container .static {
-    margin-top: 1200px !important;
-    top: 0px;
-    position: absolute;
-}
-
 .fixed, .horseshoe .horseshoe-container .fixed{
     margin-top: 0 !important;
     position: fixed;
     top: 0;
+}
+
+.horseshoe .horseshoe-container .static {
+    margin-top: 1200px !important;
+    top: 0px;
+    position: absolute;
 }
 
 .left,  .modal .close,  .horseshoe .horseshoe-container .side-banner.banner-left {
