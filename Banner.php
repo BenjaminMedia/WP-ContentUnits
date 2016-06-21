@@ -1,6 +1,8 @@
 <?php
 
-namespace BonnierBannerPlugin;
+namespace BonnierBanner;
+
+use BonnierBannerPlugin\BannerPlugin;
 
 class Banner
 {
@@ -45,6 +47,7 @@ class Banner
                     </div>";
             }
             if ($type == 'sidebanner') {
+                $isIndependent = (BannerPlugin::getOptionOrDefault('load-eas-functions', false) === '1')? 'fixed' : '';
                 $stickyAttr = ($sticky) ? 'class="absolute text-center static" data-listen="sticky-banner"' : 'class="absolute text-center"';
                 $banner =
                     "<div $stickyAttr>
