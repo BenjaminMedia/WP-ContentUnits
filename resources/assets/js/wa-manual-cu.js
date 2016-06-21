@@ -40,10 +40,12 @@
 
                     if($(window).scrollTop() < defaultOffset && el.hasClass('fixed')) {
                         el.removeClass('fixed');
+                        el.addClass('static');
                     }
 
                     if($(window).scrollTop() > defaultOffset && !el.hasClass('fixed') && !el.hasClass('max')) {
                         el.addClass('fixed');
+                        el.removeClass('static');
                     }
                 });
             };
@@ -62,61 +64,4 @@
             $.stickybanners($('[data-listen="sticky-banner"]'));
         });
     });
-
-    /*
-     This script makes sure that side banners in the middle of the page
-     become fixed when scrolled into view, and reset when scrolled to top
-     (to avoid clashing with the horseshoe banners).
-     */
-    $(document).on('page:change', function() {
-
-        var $banner = $('[data-listen="sticky-banner"]'),
-            docHeight = $(document).height();
-
-        if ($banner.children().length && docHeight > 2200) {
-            StickyBanner.init({
-                $banner: $banner
-            });
-        } else {
-            $banner.hide();
-        }
-    });
-
-    console.log('inside Sticky Banner');
-
-    var StickyBanner = (function() {
-        var s;
-
-        return {
-            init: function(settings) {
-                s = settings;
-
-                var self = this;
-
-                $(document).on('scroll', function() {
-
-                    if (self.isScrolledIntoView(s.$banner)) {
-                        s.$banner.removeClass('static');
-                    }
-
-                    if (s.$banner.offset().top < 800) {
-                        s.$banner.fadeOut('slow', function() {
-                            s.$banner.addClass('static').fadeIn().css('top', 0);
-                        });
-                    }
-                });
-
-            },
-            isScrolledIntoView: function(elem) {
-                var docViewTop = $(window).scrollTop(),
-                    elemTop = $(elem).offset().top;
-
-                if (elemTop < docViewTop) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    })();
 })(jQuery);

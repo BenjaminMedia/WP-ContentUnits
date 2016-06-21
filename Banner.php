@@ -47,8 +47,8 @@ class Banner
                     </div>";
             }
             if ($type == 'sidebanner') {
-                $isIndependent = (BannerPlugin::getOptionOrDefault('load-eas-functions', false) === '1')?'fixed':'fixed';
-                $stickyAttr = ($sticky) ? 'class="absolute text-center '.$isIndependent.' static" data-listen="sticky-banner"' : 'class="absolute text-center"';
+                $isIndependent = (BannerPlugin::getOptionOrDefault('load-eas-functions', false) === '1')? 'fixed' : '';
+                $stickyAttr = ($sticky) ? 'class="absolute text-center static" data-listen="sticky-banner"' : 'class="absolute text-center"';
                 $banner =
                     "<div $stickyAttr>
                         <div class='banner-min-height banner gtm-banner' data-banner-code='$cu' data-banner-target='true' id='banner-$cu'></div>
