@@ -25,14 +25,18 @@ class BannerPlugin{
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
-            wp_enqueue_script('EAS-jquery', 'https://code.jquery.com/jquery-1.12.4.min.js');
             if ($this->getOptionOrDefault('load-eas-functions', false)) {
                 wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js');
             } else {
                 wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
             }
-            
             wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
+
+            // lazyloadxt
+            wp_enqueue_style('lazyloadxt-css', $this->getPublicFolder() . '/css/lazyloadxt/jquery.lazyloadxt.spinner.css');
+            wp_enqueue_script('lazyloadxt-extra-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.extra.min.js');
+            wp_enqueue_script('lazyloadxt-srcset-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.srcset.min.js');
+
         }, 999);
     }
 
