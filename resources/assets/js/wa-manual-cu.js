@@ -40,10 +40,12 @@
 
                     if($(window).scrollTop() < defaultOffset && el.hasClass('fixed')) {
                         el.removeClass('fixed');
+                        el.addClass('static');
                     }
 
                     if($(window).scrollTop() > defaultOffset && !el.hasClass('fixed') && !el.hasClass('max')) {
                         el.addClass('fixed');
+                        el.removeClass('static');
                     }
                 });
             };

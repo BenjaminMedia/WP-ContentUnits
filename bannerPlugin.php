@@ -25,10 +25,13 @@ class BannerPlugin{
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
+            wp_enqueue_script('EAS-jquery', 'https://code.jquery.com/jquery-1.12.4.min.js');
             if ($this->getOptionOrDefault('load-eas-functions', false)) {
                 wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js');
+            } else {
+                wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
             }
-            wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
+            
             wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
         }, 999);
     }
@@ -39,7 +42,7 @@ class BannerPlugin{
      * @param null $defaultValue
      * @return mixed|null|void
      */
-    public function getOptionOrDefault($option, $defaultValue = NULL) {
+    public static function getOptionOrDefault($option, $defaultValue = NULL) {
         $newHookNamespace = 'ContentUnit-';
         $oldHookNamespace = 'wp-manual-cu-';
         $themeHook = NULL;
