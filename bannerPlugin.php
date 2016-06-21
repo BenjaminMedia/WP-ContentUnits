@@ -25,6 +25,7 @@ class BannerPlugin{
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
+            wp_enqueue_script( 'EAS-jquery', get_site_url(). '/wp-includes/js/jquery/jquery.js', array('jquery'));
             if ($this->getOptionOrDefault('load-eas-functions', false)) {
                 wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js');
             } else {
