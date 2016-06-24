@@ -6,9 +6,13 @@ function EAS_load_fif(divId, fifSrc, easSrc, width, height, fixedSrc) {
     var fif = d.createElement("iframe");
     var div = d.getElementById(divId);
 
-    fif.src = fifSrc;
-    fif.style.width = width + "px";
-    fif.style.height = height + "px";
+    if(jQuery.lazyLoadXT) {
+        fif.setAttribute('data-src', fifSrc);
+    } else {
+        fif.src = fifSrc;
+        fif.style.width = width + "px";
+        fif.style.height = height + "px";
+    }
     fif.style.margin = "0px";
     fif.style.borderWidth = "0px";
     fif.style.padding = "0px";

@@ -31,8 +31,13 @@ class BannerPlugin{
             } else {
                 wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
             }
-            
             wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
+
+            // lazyloadxt
+            wp_enqueue_style('lazyloadxt-css', $this->getPublicFolder() . '/css/lazyloadxt/jquery.lazyloadxt.spinner.css');
+            wp_enqueue_script('lazyloadxt-extra-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.extra.min.js');
+            wp_enqueue_script('lazyloadxt-srcset-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.srcset.min.js');
+
         }, 999);
     }
 
