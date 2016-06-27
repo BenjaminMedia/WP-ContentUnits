@@ -6,7 +6,7 @@ function EAS_load_fif(divId, fifSrc, easSrc, width, height, fixedSrc) {
     var fif = d.createElement("iframe");
     var div = d.getElementById(divId);
 
-    if(jQuery.lazyLoadXT) {
+    if(jQuery().lazyLoadXT) {
         fif.setAttribute('data-src', fifSrc);
     } else {
         fif.src = fifSrc;
