@@ -2,6 +2,7 @@
 
 namespace BonnierBannerPlugin;
 
+use BonnierBanner\Banner;
 use BonnierBannerGroup\BannerGroup;
 
 class BannerPlugin{
@@ -25,13 +26,20 @@ class BannerPlugin{
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
+
             if ($this->getOptionOrDefault('load-eas-functions', false)) {
-                wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js');
+                wp_enqueue_script('EAS-functions', $this->getPublicFolder() . '/js/EAS_functions.js', array(), true, true);
             } else {
-                wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js');
+                wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js', array(), true, true);
             }
-            
             wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
+
+            // lazyloadxt
+            wp_enqueue_script('EAS-jquery', get_site_url(). '/wp-includes/js/jquery/jquery.js', array('jquery'), true, true);
+            wp_enqueue_style('lazyloadxt-css', $this->getPublicFolder() . '/css/lazyloadxt/jquery.lazyloadxt.spinner.css');
+            wp_enqueue_script('lazyloadxt-extra-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.extra.min.js', array(), true, true);
+            wp_enqueue_script('lazyloadxt-srcset-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.srcset.min.js', array(), true, true);
+
         }, 999);
     }
 
