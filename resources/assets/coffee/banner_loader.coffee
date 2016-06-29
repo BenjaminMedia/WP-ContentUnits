@@ -103,6 +103,7 @@ class Banners
 
   placeIframeBanner: ($target, code) ->
     id = "banner-#{Math.floor((Math.random() * 999999999) + 1)}"
+    slotNo = $target.data('banner-code').match(/_(\d+)/)[1]
     $target
       .attr('id', id)
       .empty() # Clear position if banner is updated
@@ -112,7 +113,8 @@ class Banners
       $('body').removeAttr('style') # Clear body background image if target is wallpaper
 
     if code
-      EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=#{code}&#{@generateParameters()}", 0, 0)
+      EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=#{code}&EASTslot_no=#{slotNo}&#{@generateParameters()}", 0, 0)
+      console.log("http://eas4.emediate.eu/eas?cu=#{code}&EASTslot_no=#{slotNo}&#{@generateParameters()}")
     else
       $target.hide()
 

@@ -154,14 +154,16 @@
     };
 
     Banners.prototype.placeIframeBanner = function($target, code) {
-      var id;
+      var id, slotNo;
       id = "banner-" + (Math.floor((Math.random() * 999999999) + 1));
+      slotNo = $target.data('banner-code').match(/_(\d+)/)[1];
       $target.attr('id', id).empty().parent().addClass('text-center');
       if ($target.parent().data('wallpaper-banner') != null) {
         $('body').removeAttr('style');
       }
       if (code) {
-        EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=" + code + "&" + (this.generateParameters()), 0, 0);
+        EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=" + code + "&EASTslot_no=" + slotNo + "&" + (this.generateParameters()), 0, 0);
+        console.log("http://eas4.emediate.eu/eas?cu=" + code + "&EASTslot_no=" + slotNo + "&" + (this.generateParameters()));
       } else {
         $target.hide();
       }
