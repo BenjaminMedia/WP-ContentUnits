@@ -17,5 +17,6 @@ include_once($directory.'Banner.php');
 const HOOK_DEFAULT_MIDDLE = 'headway_after_entry_content';
 const HOOK_DEFAULT_HORSESHOE = 'headway_page_start';
 const HOOK_DEFAULT_FOOTER = 'headway_footer_close';
+const HOOK_DEFAULT_ABOVE_COMMENTS = 'headway_before_entry_comments';
 
 $initPlugin = new \BonnierBannerPlugin\BannerPlugin();
