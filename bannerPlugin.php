@@ -23,6 +23,7 @@ class BannerPlugin{
         add_action($this->getOptionOrDefault('horseshoe-theme-hook',$this->getOptionOrDefault('theme-hook-horseshoe', HOOK_DEFAULT_HORSESHOE)), array($this,'headerBanners'));
         add_action($this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE), array($this,'middleBanners'));
         add_action($this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER), array($this,'footerBanners'));
+        add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
@@ -162,6 +163,29 @@ class BannerPlugin{
 
     }
 
+    public function aboveCommentsBanners(){
+        $aboveCommentsDesktop = $this->getOptionOrDefault('desktop-comments',$this->getOptionOrDefault('comments-desktop'));
+        $aboveCommentsTablet = $this->getOptionOrDefault('tablet-comments', $this->getOptionOrDefault('comments-tablet'));
+        $aboveCommentsMobile = $this->getOptionOrDefault('mobile-comments', $this->getOptionOrDefault('comments-mobile'));
+
+        $aboveCommentsBannerGroup = BannerGroup::htmlCodeFromProps('Above Comments Banners',
+            [
+                'banners' => [
+                    'lg'=>$aboveCommentsDesktop,
+                    'sm'=>$aboveCommentsTablet,
+                    'xs'=>$aboveCommentsMobile,
+                ]
+            ],'banner_group');
+
+        echo "<div class='row' id='above-comments-banners'>
+            <div class='col-sm-12'>
+                $aboveCommentsBannerGroup
+                <div class='clearfix'></div>
+            </div>
+        </div>";
+
+    }
+
     public function settingsPage(){
         if (count($_POST) >= 1) {
             echo"<div class='updated'> <p>Updated settings</p></div>";
@@ -226,6 +250,20 @@ class BannerPlugin{
             ]
         ]);
 
+        $aboveCommentsForm = $this->generateOptionPanel('Above Comments Banners', [
+            'title' => 'above-comments',
+            'forms' => [
+                self::generateBannerGroupForm('Above Comments Hook','comments',[
+                    'theme-hook' => 'code-fork',
+                ]),
+                self::generateBannerGroupForm('Above Comments Banners','comments',[
+                    'Desktop' => 'desktop',
+                    'Tablet' => 'tablet',
+                    'Mobile' => 'mobile'
+                ])
+            ]
+        ]);
+
         $metaForm = $this->generateOptionPanel('General Settings', [
             'title' => 'General',
             'forms' => [
@@ -261,8 +299,10 @@ class BannerPlugin{
 
             <form method="post" action=''>
                 $HorseshoeForm
-                
+
                 $middleForm
+
+                $aboveCommentsForm
 
                 $footerForm
 
@@ -319,7 +359,6 @@ HTML;
                 <span class="input-group-addon">
                     <i class="fa fa-'.strtolower($value).'"></i>
                 </span>
-
                 <input class="form-control" name="'.strtolower($namespace).'-'.strtolower($key).'" placeholder="'.$namespace.' '.$key.'" value="'.$this->getOptionOrDefault(strtolower($namespace).'-'.strtolower($key),$this->getOptionOrDefault(strtolower($key).'-'.strtolower($namespace),NULL)).'" type="text">';
         }
         $htmlDropdown .= '</div>';
