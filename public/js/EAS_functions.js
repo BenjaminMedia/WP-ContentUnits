@@ -141,6 +141,10 @@ function EAS_getCxProfileCookieData() {
         $(window).off('resize.stickybanners').on('resize.stickybanners', function() {
             $.stickybanners($('[data-listen="sticky-banner"]'));
         });
+
+        $(window).scroll(function() {
+            $(document).find('iframe[data-src]').lazyLoadXT();
+        });
     });
 })(jQuery);
 //# sourceMappingURL=EAS_functions.js.map
