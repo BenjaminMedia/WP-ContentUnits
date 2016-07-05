@@ -63,5 +63,9 @@
         $(window).off('resize.stickybanners').on('resize.stickybanners', function() {
             $.stickybanners($('[data-listen="sticky-banner"]'));
         });
+
+        $(window).scroll(function() {
+            $(document).find('iframe[data-src]').lazyLoadXT();
+        });
     });
 })(jQuery);
