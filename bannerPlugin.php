@@ -21,8 +21,8 @@ class BannerPlugin{
             add_options_page('Manual Content Units', 'Manage Content Units', 'manage_options', 'mcu_settings', array($this,'settingsPage'));
         });
         add_action($this->getOptionOrDefault('horseshoe-theme-hook',$this->getOptionOrDefault('theme-hook-horseshoe', HOOK_DEFAULT_HORSESHOE)), array($this,'headerBanners'));
-        add_action($this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE), array($this,'middleBanners'));
-        add_action($this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER), array($this,'footerBanners'));
+        add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'));
+        add_action($this->getOptionOrDefault('footer-theme-hook', $this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER)), array($this,'footerBanners'));
         add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
         add_action('wp_enqueue_scripts', function() {
 
