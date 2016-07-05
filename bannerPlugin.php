@@ -33,10 +33,9 @@ class BannerPlugin{
             } else {
                 wp_enqueue_script('EAS-fif', $this->getPublicFolder() . '/js/EAS_fif.js', array(), true, true);
             }
-            wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js');
+            wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/banners.js', array(), true, true);
 
             // lazyloadxt
-            wp_enqueue_script('EAS-jquery', get_site_url(). '/wp-includes/js/jquery/jquery.js', array('jquery'), true, true);
             wp_enqueue_style('lazyloadxt-css', $this->getPublicFolder() . '/css/lazyloadxt/jquery.lazyloadxt.spinner.css');
             wp_enqueue_script('lazyloadxt-extra-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.extra.min.js', array(), true, true);
             wp_enqueue_script('lazyloadxt-srcset-js', $this->getPublicFolder() . '/js/lazyloadxt/jquery.lazyloadxt.srcset.min.js', array(), true, true);
