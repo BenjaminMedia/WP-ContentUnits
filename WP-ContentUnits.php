@@ -18,5 +18,6 @@ const HOOK_DEFAULT_MIDDLE = 'headway_after_entry_content';
 const HOOK_DEFAULT_HORSESHOE = 'headway_page_start';
 const HOOK_DEFAULT_FOOTER = 'headway_footer_close';
 const HOOK_DEFAULT_ABOVE_COMMENTS = 'headway_before_entry_comments';
+const HOOK_DEFAULT_SECOND_MIDDLE = 'headway_after_entry_content';
 
 $initPlugin = new \BonnierBannerPlugin\BannerPlugin();

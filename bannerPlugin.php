@@ -21,9 +21,10 @@ class BannerPlugin{
             add_options_page('Manual Content Units', 'Manage Content Units', 'manage_options', 'mcu_settings', array($this,'settingsPage'));
         });
         add_action($this->getOptionOrDefault('horseshoe-theme-hook',$this->getOptionOrDefault('theme-hook-horseshoe', HOOK_DEFAULT_HORSESHOE)), array($this,'headerBanners'));
-        add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'));
+        add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'),100);
         add_action($this->getOptionOrDefault('footer-theme-hook', $this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER)), array($this,'footerBanners'));
         add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
+        add_action($this->getOptionOrDefault('theme-hook-second-middle-banner', $this->getOptionOrDefault('second-middle-banner-theme-hook', HOOK_DEFAULT_SECOND_MIDDLE)), array($this,'secondMiddleBanners'));
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
@@ -138,6 +139,28 @@ class BannerPlugin{
         }
     }
 
+    public function secondMiddleBanners() {
+        $desktopSecondMiddle = $this->getOptionOrDefault('desktop-second-middle', $this->getOptionOrDefault('second-middle-desktop'));
+        $tabletSecondMiddle = $this->getOptionOrDefault('tablet-second-middle', $this->getOptionOrDefault('second-middle-tablet'));
+        $mobileSecondMiddle = $this->getOptionOrDefault('mobile-second-middle', $this->getOptionOrDefault('second-middle-mobile'));
+
+        $maxPostsPerPage = get_option('posts_per_page');
+        $postOffset = 1;
+        // we do not add to the postCount variable as it is already being added to in middleBanners
+        if($this->postCount == $postOffset){
+            if( ($this->postCount == $postOffset) && ($maxPostsPerPage >= $this->postCount) ) {
+                echo BannerGroup::htmlCodeFromProps('#2 Middle Banner',
+                    [
+                        'banners' => [
+                            'lg'=>$desktopSecondMiddle,
+                            'sm'=>$tabletSecondMiddle,
+                            'xs'=>$mobileSecondMiddle,
+                        ]
+                    ],'banner_group');
+            }
+        }
+    }
+
     public function footerBanners(){
     $footerDesktop = $this->getOptionOrDefault('desktop-footer',$this->getOptionOrDefault('footer-desktop'));
     $footerTablet = $this->getOptionOrDefault('tablet-footer', $this->getOptionOrDefault('footer-tablet'));
@@ -222,12 +245,26 @@ class BannerPlugin{
         ]);
 
         $middleForm = $this->generateOptionPanel('Between Content Banners (aka. Middle)', [
-            'title' => 'Middle',
+            'title' => 'second-middle',
             'forms' => [
                 self::generateBannerGroupForm('Middle Banner Hook','middle',[
                     'theme-hook' => 'code-fork',
                 ]),
                 self::generateBannerGroupForm('Middle Banner Group','middle',[
+                    'Desktop' => 'desktop',
+                    'Tablet' => 'tablet',
+                    'Mobile' => 'mobile'
+                ])
+            ]
+        ]);
+
+        $secondMiddleForm = $this->generateOptionPanel('#2 Middle Banner (Strossle)', [
+            'title' => 'Second',
+            'forms' => [
+                self::generateBannerGroupForm('#2 Middle Banner Hook','second-middle',[
+                    'theme-hook' => 'code-fork',
+                ]),
+                self::generateBannerGroupForm('#2 Middle Banner Group','second-middle',[
                     'Desktop' => 'desktop',
                     'Tablet' => 'tablet',
                     'Mobile' => 'mobile'
@@ -300,6 +337,8 @@ class BannerPlugin{
                 $HorseshoeForm
 
                 $middleForm
+
+                $secondMiddleForm
 
                 $aboveCommentsForm
 
