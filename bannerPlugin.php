@@ -24,7 +24,7 @@ class BannerPlugin{
         add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'),100);
         add_action($this->getOptionOrDefault('footer-theme-hook', $this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER)), array($this,'footerBanners'));
         add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
-        add_action($this->getOptionOrDefault('theme-hook-second-middle-banner', $this->getOptionOrDefault('second-middle-banner-theme-hook', HOOK_DEFAULT_SECOND_MIDDLE)), array($this,'secondMiddleBanners'));
+        add_action($this->getOptionOrDefault('second-middle-theme-hook', $this->getOptionOrDefault('theme-hook-second-middle', HOOK_DEFAULT_SECOND_MIDDLE)), array($this,'secondMiddleBanners'));
         add_action('wp_enqueue_scripts', function() {
 
             wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
