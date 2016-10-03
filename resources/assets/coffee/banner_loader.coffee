@@ -95,7 +95,7 @@ class Banners
   generateParameters: ->
     cxenseParams   = eas.hlp.getCxProfileCookieData() # Cxense params to get segmented banners
     category       = $('meta[name="banner-category"]').attr('content') # get category from meta tag (mainly for external blogs)
-    url            = window.location.protocol + "//" + window.location.host + window.location.pathname
+    url            = "//" + window.location.host + window.location.pathname
 
     if category? then categoryParams = "&cat=#{category}" else categoryParams = ''
 
