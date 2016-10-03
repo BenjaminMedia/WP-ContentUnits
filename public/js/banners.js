@@ -144,7 +144,7 @@
       var category, categoryParams, cxenseParams, url;
       cxenseParams = eas.hlp.getCxProfileCookieData();
       category = $('meta[name="banner-category"]').attr('content');
-      url = "//" + window.location.host + window.location.pathname;
+      url = window.location.protocol + "//" + window.location.host + window.location.pathname;
       if (category != null) {
         categoryParams = "&cat=" + category;
       } else {
@@ -161,7 +161,7 @@
         $('body').removeAttr('style');
       }
       if (code) {
-        EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=" + code + "&" + (this.generateParameters()), 0, 0);
+        EAS_load_fif(id, "/emediate/EAS_fif.html", "https://eas4.emediate.eu/eas?cu=" + code + "&" + (this.generateParameters()), 0, 0);
       } else {
         $target.hide();
       }
