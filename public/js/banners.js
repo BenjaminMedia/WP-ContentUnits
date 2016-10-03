@@ -144,7 +144,7 @@
       var category, categoryParams, cxenseParams, url;
       cxenseParams = eas.hlp.getCxProfileCookieData();
       category = $('meta[name="banner-category"]').attr('content');
-      url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      url = "//" + window.location.host + window.location.pathname;
       if (category != null) {
         categoryParams = "&cat=" + category;
       } else {
