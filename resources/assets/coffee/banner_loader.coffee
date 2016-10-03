@@ -95,7 +95,7 @@ class Banners
   generateParameters: ->
     cxenseParams   = eas.hlp.getCxProfileCookieData() # Cxense params to get segmented banners
     category       = $('meta[name="banner-category"]').attr('content') # get category from meta tag (mainly for external blogs)
-    url            = "//" + window.location.host + window.location.pathname
+    url            = window.location.protocol + "//" + window.location.host + window.location.pathname
 
     if category? then categoryParams = "&cat=#{category}" else categoryParams = ''
 
@@ -112,7 +112,7 @@ class Banners
       $('body').removeAttr('style') # Clear body background image if target is wallpaper
 
     if code
-      EAS_load_fif(id, "/emediate/EAS_fif.html", "http://eas4.emediate.eu/eas?cu=#{code}&#{@generateParameters()}", 0, 0)
+      EAS_load_fif(id, "/emediate/EAS_fif.html", "https://eas4.emediate.eu/eas?cu=#{code}&#{@generateParameters()}", 0, 0)
     else
       $target.hide()
 
