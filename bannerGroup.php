@@ -33,11 +33,9 @@ Class BannerGroup
                 $leftSticky = Banner::htmlCodeFromProps($contentUnits['left']['sticky'], null, 'sidebanner', true);
                 $right = Banner::htmlCodeFromProps($contentUnits['right']['side'], null, 'sidebanner', false);
                 $rightSticky = Banner::htmlCodeFromProps($contentUnits['right']['sticky'], null, 'sidebanner', true);
-                $wallpaper = Banner::htmlCodeFromProps($contentUnits['wallpaper'], 'lg', 'wallpaper', false);
 
                 $horseshoe =
                     "
-                    $wallpaper
                     <div class='horseshoe' data-banner-horseshoe>
                       <div class='horseshoe-container'>
                         <div class='side-banner banner-left visible-md-lg' data-banner-md-lg>
