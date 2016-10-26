@@ -5,77 +5,84 @@ namespace BonnierBannerPlugin;
 use BonnierBanner\Banner;
 use BonnierBannerGroup\BannerGroup;
 
-class BannerPlugin{
+class BannerPlugin {
+    const OLD_SETTINGS_NAMESPACE = 'wp-manual-cu-';
+    const NEW_SETTINGS_NAMESPACE = 'ContentUnit-';
+    const HOOK_DEFAULT_MIDDLE = 'headway_after_entry_content';
+    const HOOK_DEFAULT_HORSESHOE = 'headway_page_start';
+    const HOOK_DEFAULT_FOOTER = 'headway_footer_close';
+    const HOOK_DEFAULT_ABOVE_COMMENTS = 'headway_before_entry_comments';
+    const HOOK_DEFAULT_SECOND_MIDDLE = 'headway_after_entry_content';
+    const BCM_BODY_OPEN_HOOK = 'before_wa_shell_start';
+    const BCM_BODY_CLOSE_HOOK = 'headway_body_close';
+    const BCM_TOP_BANNER_SLUG = 'top-banner';
+    const BCM_SIDE_LEFT_BANNER_SLUG = 'sky-left';
+    const BCM_SIDE_RIGHT_BANNER_SLUG = 'sky-right';
+    const BCM_STICKY_RIGHT_BANNER_SLUG = 'sky-right-sticky';
+    const BCM_STICKY_LEFT_BANNER_SLUG = 'sky-left-sticky';
+    const BCM_MIDDLE_BANNER_SLUG = 'middle-banner';
+    const BCM_SECOND_MIDDLE_BANNER_SLUG = 'middle-banner';
+    const BCM_ABOVE_COMMENTS_BANNER_SLUG = 'middle-banner';
+    const BCM_FOOTER_BANNER_SLUG = 'middle-banner';
+    const BCM_WALLPAPER_BANNER_SLUG = 'wallpaper';
+    const BCM_LAYER_BANNER_SLUG = 'layer';
+    const BCM_LAYER2_BANNER_SLUG = 'layer2';
+    const BCM_WALLPAPER_AND_LAYER_HOOK = 'wp_footer';
+    const BCM_MOBILE_BREAKPOINT = '480';
+    const BCM_TABLET_BREAKPOINT = '768';
+
     private $postCount = 0;
-    private $externalHeaderSlug = 'wp-content-units';
     private $isExternalHeaderActive;
-    public $bcmBrand = '';
-    public $bcmCountry = '';
-    public $bcmType = '';
-    public $bcmCxensePersistedQueryId = '';
-    public $bcmMobileBreakpoint;
-    public $bcmTabletBreakpoint;
-    public $pageTitle;
-    public $pageTags;
-    public $pageCategories;
-    public $pageContentType;
+    private $headMetaTags = [];
     public $externalShell;
-    public $bcmSub;
+
+    private $bcmSettings = [
+        'bcm-sub' => null,
+        'bcm-brand' => null,
+        'bcm-type' => null,
+        'bcm-country' => null,
+        'cxense-persisted-query-id' => null,
+        'bcm-mobile-breakpoint' => self::BCM_MOBILE_BREAKPOINT,
+        'bcm-tablet-breakpoint' => self::BCM_TABLET_BREAKPOINT,
+    ];
 
     public function __construct(){
         $this->addHooks();
         include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        $this->setBcmVariables();
     }
 
     public function setBcmVariables(){
-        $this->bcmBrand = $this->getOptionOrDefault('bcm-brand', BCM_BRAND);
-        $this->bcmCountry = $this->getOptionOrDefault('bcm-country', BCM_COUNTRY);
-        $this->bcmType = $this->getOptionOrDefault('bcm-type', BCM_TYPE);
-        $this->bcmSub = $this->getOptionOrDefault('bcm-sub', BCM_SUB);
-        $this->bcmCxensePersistedQueryId = $this->getOptionOrDefault('bcm-cxense');
-        $this->bcmMobileBreakpoint = $this->getOptionOrDefault('breakpoint-mobile', BCM_MOBILE_BREAKPOINT);
-        $this->bcmTabletBreakpoint = $this->getOptionOrDefault('breakpoint-tablet', BCM_TABLET_BREAKPOINT);
+        foreach($this->bcmSettings as $bcmSetting => $defaultValue) {
+            $this->headMetaTags[$bcmSetting] = $this->getOptionOrDefault($bcmSetting, $defaultValue);
+        }
     }
 
     public function setDynamicPageVariables(){
-        $title = '';
-        $tags = '';
-        $categories = '';
-        $contentType = '';
-        $contentType = (get_post_type() === 'post')?'article':get_post_type();
-
-        if(!is_front_page()){
-            $title = get_the_title().' — '. get_bloginfo( 'name' );
-        }
-        else {
-            $title = get_bloginfo( 'name' );
-        }
-
-        if(!is_front_page() && get_the_tags()){
-            $postTags = get_the_tags();
-            $tagAmount = count($postTags)-1;
-            foreach($postTags as $postTag){
-                //return all tags seperated by commas
-                $tags .= $postTag->slug;
-                $tags .= ($postTags[$tagAmount] !== $postTag)?',':'';
+        $bcmPostTypes = [
+            'post' => 'blog-post',
+            'page' => 'article',
+        ];
+        if(is_front_page()){
+            $this->headMetaTags['bcm-title'] = get_bloginfo( 'name' );
+            $this->headMetaTags['bcm-content-type'] = 'frontpage' ;
+        } else {
+            $this->headMetaTags['bcm-title'] = get_the_title().' — '. get_bloginfo( 'name' );
+            $this->headMetaTags['bcm-content-type'] = isset($bcmPostTypes[get_post_type()]) ? $bcmPostTypes[get_post_type()] : 'article';
+            if($postTags = get_the_tags()){
+                $tagSlugs = [];
+                foreach($postTags as $postTag) {
+                    $tagSlugs[] = $postTag->slug;
+                }
+                $this->headMetaTags['bcm-tags'] = implode(',', $tagSlugs);
+            }
+            if($postCategories = get_categories()){
+                $categorySlugs = [];
+                foreach($postCategories as $postCategory) {
+                    $categorySlugs[] = $postCategory->slug;
+                }
+                $this->headMetaTags['bcm-categories'] = implode(',', $categorySlugs);
             }
         }
-
-        if(!is_front_page() && get_categories(array('slug'))){
-            $postCategories = get_categories(array('slug'));
-            $categoryAmount = count($postCategories)-1;
-            foreach($postCategories as $postCategory){
-                //return all categories seperated by commas
-                $categories .= $postCategory->slug;
-                $categories .= ($postCategories[$categoryAmount] !== $postCategory)?',':'';
-            }
-        }
-
-        $this->pageTitle = $title;
-        $this->pageTags = $tags;
-        $this->pageCategories = $categories;
-        $this->pageContentType = $contentType;
     }
 
     private function addHooks(){
@@ -86,12 +93,6 @@ class BannerPlugin{
             // Add a new submenu item under Settings:
             add_options_page('Manual Content Units', 'Manage Content Units', 'manage_options', 'mcu_settings', array($this,'settingsPage'));
         });
-        add_action('wp_head', array($this,'setDynamicPageVariables'),1);
-        add_action('wp_head', array($this, 'addDynamicBcmTagsToHead'),10);
-        add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'), 999999);
-        add_filter($this->getOptionOrDefault('body-open-hook', BCM_BODY_OPEN_HOOK ) ,array($this,'addWallpaperDivOpen'),999);
-        add_filter($this->getOptionOrDefault('body-close-hook', BCM_BODY_CLOSE_HOOK ) ,array($this,'addWallpaperDivClose'),999);
-        add_action($this->getOptionOrDefault('footer-theme-hook', $this->getOptionOrDefault('theme-hook-footer', HOOK_DEFAULT_FOOTER)), array($this,'footerBanners'));
         add_action('plugins_loaded', function(){
             if(class_exists('Wa_External_Header_V2_Public')){
                 $this->externalShell = \Wa_External_Header_V2_Public::getInstance();
@@ -102,19 +103,25 @@ class BannerPlugin{
                 $this->isExternalHeaderActive = false;
             }
 
-            if(($this->isExternalHeaderActive && !$this->externalShell->showShellBanners()) || (!$this->isExternalHeaderActive)){
+            if( ($this->isExternalHeaderActive && !$this->externalShell->showShellBanners()) || (!$this->isExternalHeaderActive && $this->bcmEnabledAndConfigured()) ) {
                 //if the WA External shell is not activated, we'll load bcm ourselves.
-                add_action('wp_head', array($this,'addBcmTagsToHead'));
-                add_action($this->getOptionOrDefault('horseshoe-theme-hook',$this->getOptionOrDefault('theme-hook-horseshoe', HOOK_DEFAULT_HORSESHOE)), array($this,'headerBanners'));
-                add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
-                add_action($this->getOptionOrDefault('second-middle-theme-hook', $this->getOptionOrDefault('theme-hook-second-middle', HOOK_DEFAULT_SECOND_MIDDLE)), array($this,'secondMiddleBanners'));
-                add_action($this->getOptionOrDefault('wallpaper-hook', $this->getOptionOrDefault('theme-hook-second-middle', BCM_WALLPAPER_AND_LAYER_HOOK)), array($this,'wallpaperAndLayerBanners'));
+                $this->setBcmVariables();
+                add_action($this->getOptionOrDefault('horseshoe-theme-hook',$this->getOptionOrDefault('theme-hook-horseshoe', self::HOOK_DEFAULT_HORSESHOE)), array($this,'headerBanners'));
+                add_action($this->getOptionOrDefault('theme-hook-comments', $this->getOptionOrDefault('comments-theme-hook', self::HOOK_DEFAULT_ABOVE_COMMENTS)), array($this,'aboveCommentsBanners'));
+                add_action($this->getOptionOrDefault('second-middle-theme-hook', $this->getOptionOrDefault('theme-hook-second-middle', self::HOOK_DEFAULT_SECOND_MIDDLE)), array($this,'secondMiddleBanners'));
+                add_action($this->getOptionOrDefault('wallpaper-hook', $this->getOptionOrDefault('theme-hook-second-middle', self::BCM_WALLPAPER_AND_LAYER_HOOK)), array($this,'wallpaperAndLayerBanners'));
                 add_action('wp_enqueue_scripts', function() {
-
                     wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
-                    wp_enqueue_script('bcm-script', 'https://bcm.interactives.dk/script/'.$this->bcmCountry.'/'.$this->bcmBrand.'/'.$this->bcmType, array(), true, true);
+                    wp_enqueue_script('bcm-script', 'https://bcm.interactives.dk/script/'.$this->headMetaTags['bcm-country'].'/'.$this->headMetaTags['bcm-brand'].'/'.$this->headMetaTags['bcm-type'], array(), true, true);
                 }, 999);
             }
+
+            add_action('wp_head', array($this, 'setDynamicPageVariables'), 1);
+            add_action('wp_head', array($this, 'addHeadMetaTags'), 10);
+            add_action($this->getOptionOrDefault('middle-theme-hook', $this->getOptionOrDefault('theme-hook-middle', self::HOOK_DEFAULT_MIDDLE)), array($this,'middleBanners'), 999);
+            add_filter($this->getOptionOrDefault('body-open-hook', self::BCM_BODY_OPEN_HOOK ) ,array($this,'addWallpaperDivOpen'),999);
+            add_filter($this->getOptionOrDefault('body-close-hook', self::BCM_BODY_CLOSE_HOOK ) ,array($this,'addWallpaperDivClose'),999);
+            add_action($this->getOptionOrDefault('footer-theme-hook', $this->getOptionOrDefault('theme-hook-footer', self::HOOK_DEFAULT_FOOTER)), array($this,'footerBanners'));
         });
     }
 
@@ -124,22 +131,17 @@ class BannerPlugin{
      * @param null $defaultValue
      * @return mixed|null|void
      */
-    public static function getOptionOrDefault($option, $defaultValue = NULL) {
-        $newHookNamespace = 'ContentUnit-';
-        $oldHookNamespace = 'wp-manual-cu-';
-        $themeHook = NULL;
-        if(NULL !==(get_option($newHookNamespace. $option, NULL) )){
-            $themeHook = get_option($newHookNamespace . $option, NULL );
+    public static function getOptionOrDefault($option, $defaultValue = null) {
+        return get_option(self::NEW_SETTINGS_NAMESPACE. $option, false) ?: get_option(self::OLD_SETTINGS_NAMESPACE . $option, $defaultValue);
+    }
+
+    public function bcmEnabledAndConfigured() {
+        foreach($this->bcmSettings as $bcmSetting => $defaultValue) {
+            if(!self::getOptionOrDefault($bcmSetting, false)) {
+                return false;
+            }
         }
-        else{
-            $themeHook = get_option($oldHookNamespace . $option, NULL );
-        }
-        if( NULL === $themeHook || '' === $themeHook){
-            return $defaultValue;
-        }
-        else{
-            return $themeHook;
-        }
+        return true;
     }
 
     public function getPublicFolder()
@@ -159,38 +161,24 @@ class BannerPlugin{
         return Banner::htmlCodeFromProps($bannerShortCodeAttributes['cu'],$bannerShortCodeAttributes['breakpoint'],'banner',$bannerShortCodeAttributes['sticky'],$bannerShortCodeAttributes['offset']);
     }
 
-    public function addBcmTagsToHead(){
-
-        echo "
-            <meta name=\"bcm-brand\" content=\"$this->bcmBrand\" />
-            <meta name=\"bcm-country\" content =\"$this->bcmCountry\" />
-            <meta name=\"bcm-type\" content =\"$this->bcmType\" />
-            <meta name=\"bcm-sub\" content=\"$this->bcmSub\" />
-            <meta name=\"bcm-tablet-breakpoint\" content=\"$this->bcmTabletBreakpoint\">
-            <meta name=\"bcm-mobile-breakpoint\" content=\"$this->bcmMobileBreakpoint\">
-            ";
-    }
-
-    public function addDynamicBcmTagsToHead(){
-        echo "
-        <meta name=\"cxense-persisted-query-id\" content =\"$this->bcmCxensePersistedQueryId\" />
-            <meta name=\"bcm-tags\" content=\"$this->pageTags\" />
-            <meta name=\"bcm-categories\" content=\"$this->pageCategories\" />
-            <meta name=\"bcm-title\" content=\"$this->pageTitle\" />
-            <meta name=\"bcm-content-type\" content=\"$this->pageContentType\" />
-        ";
+    public function addHeadMetaTags() {
+        foreach ($this->headMetaTags as $headMetaTag => $content) {
+            if(!empty($content)) {
+                echo "<meta name='$headMetaTag' content='$content' />" . PHP_EOL;
+            }
+        }
     }
 
     public function addWallpaperDivOpen(){ echo "<div id=\"wallpaper\">"; }
     public function addWallpaperDivClose(){ echo "</div>"; }
 
     public function headerBanners(){
-        $sidebannerLeft = $this->getOptionOrDefault('sidebanner-left',$this->getOptionOrDefault('sidebanner-left',BCM_SIDE_LEFT_BANNER_SLUG));
-        $sidebannerRight = $this->getOptionOrDefault('sidebanner-right',$this->getOptionOrDefault('sidebanner-right',BCM_SIDE_RIGHT_BANNER_SLUG));
-        $stickyLeft = $this->getOptionOrDefault('sticky-left',$this->getOptionOrDefault('left-sticky',BCM_STICKY_LEFT_BANNER_SLUG));
-        $stickyRight = $this->getOptionOrDefault('sticky-right',$this->getOptionOrDefault('right-sticky',BCM_STICKY_RIGHT_BANNER_SLUG));
+        $sidebannerLeft = $this->getOptionOrDefault('sidebanner-left', $this->getOptionOrDefault('sidebanner-left', self::BCM_SIDE_LEFT_BANNER_SLUG));
+        $sidebannerRight = $this->getOptionOrDefault('sidebanner-right', $this->getOptionOrDefault('sidebanner-right', self::BCM_SIDE_RIGHT_BANNER_SLUG));
+        $stickyLeft = $this->getOptionOrDefault('sticky-left', $this->getOptionOrDefault('left-sticky', self::BCM_STICKY_LEFT_BANNER_SLUG));
+        $stickyRight = $this->getOptionOrDefault('sticky-right', $this->getOptionOrDefault('right-sticky', self::BCM_STICKY_RIGHT_BANNER_SLUG));
 
-        $topBanner = $this->getOptionOrDefault('top-banner-slug',$this->getOptionOrDefault('top-banner-horseshoe',BCM_TOP_BANNER_SLUG));
+        $topBanner = $this->getOptionOrDefault('top-banner-slug', $this->getOptionOrDefault('top-banner-horseshoe', self::BCM_TOP_BANNER_SLUG));
 
         $horseshoeBanner = BannerGroup::htmlCodeFromProps('Horseshoe Banners',[
             'banners' => [
@@ -209,9 +197,9 @@ class BannerPlugin{
     }
 
     public function wallpaperAndLayerBanners(){
-        $wallpaper = $this->getOptionOrDefault('wallpaper-slug', BCM_WALLPAPER_BANNER_SLUG);
-        $layer = $this->getOptionOrDefault('wallpaper-layer-slug', BCM_LAYER_BANNER_SLUG);
-        $layer2 = $this->getOptionOrDefault('wallpaper-layer2-slug', BCM_LAYER2_BANNER_SLUG);
+        $wallpaper = $this->getOptionOrDefault('wallpaper-slug', self::BCM_WALLPAPER_BANNER_SLUG);
+        $layer = $this->getOptionOrDefault('wallpaper-layer-slug', self::BCM_LAYER_BANNER_SLUG);
+        $layer2 = $this->getOptionOrDefault('wallpaper-layer2-slug', self::BCM_LAYER2_BANNER_SLUG);
 
         $wallpaperAndLayerPlaceholders =
         '<div style="display:none;">
@@ -223,7 +211,7 @@ class BannerPlugin{
     }
 
     public function middleBanners(){
-        $middleBannerSlug = $this->getOptionOrDefault('middle-banner-slug', BCM_MIDDLE_BANNER_SLUG);
+        $middleBannerSlug = $this->getOptionOrDefault('middle-banner-slug', self::BCM_MIDDLE_BANNER_SLUG);
         $postsBetweenBanners = $this->getOptionOrDefault('posts-between-banners', 1);
         $postsBeforeBanners = $this->getOptionOrDefault('posts-before-banners', 0);
 
@@ -249,7 +237,7 @@ class BannerPlugin{
     }
 
     public function secondMiddleBanners() {
-        $secondMiddleBannerSlug = $this->getOptionOrDefault('middle-banner-slug', BCM_SECOND_MIDDLE_BANNER_SLUG);
+        $secondMiddleBannerSlug = $this->getOptionOrDefault('middle-banner-slug', self::BCM_SECOND_MIDDLE_BANNER_SLUG);
 
         $maxPostsPerPage = get_option('posts_per_page');
         $postOffset = 1;
@@ -274,7 +262,7 @@ class BannerPlugin{
     }
 
     public function footerBanners(){
-        $footerBannerSlug = $this->getOptionOrDefault('banner-slug-footer',$this->getOptionOrDefault('footer-banner-slug', BCM_FOOTER_BANNER_SLUG));
+        $footerBannerSlug = $this->getOptionOrDefault('banner-slug-footer',$this->getOptionOrDefault('footer-banner-slug', self::BCM_FOOTER_BANNER_SLUG));
 
     $footerBannerGroup = BannerGroup::htmlCodeFromProps('Footer Banners',
         [
@@ -297,7 +285,7 @@ class BannerPlugin{
     }
 
     public function aboveCommentsBanners(){
-        $aboveCommentsSlug = $this->getOptionOrDefault('banner-slug-comments',$this->getOptionOrDefault('comments-banner-slug', BCM_ABOVE_COMMENTS_BANNER_SLUG));
+        $aboveCommentsSlug = $this->getOptionOrDefault('banner-slug-comments',$this->getOptionOrDefault('comments-banner-slug', self::BCM_ABOVE_COMMENTS_BANNER_SLUG));
 
         $aboveCommentsBannerGroup = BannerGroup::htmlCodeFromProps('Above Comments Banners',
             [
@@ -332,26 +320,26 @@ class BannerPlugin{
                 self::generateBannerGroupForm('Horseshoe Hook','Horseshoe',[
                     'theme-hook' => 'code-fork',
                 ], [
-                    'theme-hook' => HOOK_DEFAULT_HORSESHOE
+                    'theme-hook' => self::HOOK_DEFAULT_HORSESHOE
                 ]),
                 self::generateBannerGroupForm('Horseshoe Banner Slug','Top',[
                     'banner-slug' => 'code',
                 ],[
-                    'banner-slug' => BCM_TOP_BANNER_SLUG
+                    'banner-slug' => self::BCM_TOP_BANNER_SLUG
                 ]),
                 self::generateBannerGroupForm('Side Banners','Sidebanner',[
                     'Left' => 'caret-square-o-left',
                     'Right' => 'caret-square-o-right',
                 ],[
-                    'Left' => BCM_SIDE_LEFT_BANNER_SLUG,
-                    'Right' => BCM_SIDE_RIGHT_BANNER_SLUG
+                    'Left' => self::BCM_SIDE_LEFT_BANNER_SLUG,
+                    'Right' => self::BCM_SIDE_RIGHT_BANNER_SLUG
                 ]),
                 self::generateBannerGroupForm('Sticky Banners','Sticky',[
                     'Left' => 'caret-square-o-left',
                     'Right' => 'caret-square-o-right',
                 ],[
-                    'Left' => BCM_STICKY_LEFT_BANNER_SLUG,
-                    'Right' => BCM_STICKY_RIGHT_BANNER_SLUG
+                    'Left' => self::BCM_STICKY_LEFT_BANNER_SLUG,
+                    'Right' => self::BCM_STICKY_RIGHT_BANNER_SLUG
                 ]),
             ]
         ]);
@@ -362,25 +350,18 @@ class BannerPlugin{
                 self::generateBannerGroupForm('BCM Information','bcm',[
                     'brand' => 'star',
                     'type' => 'sitemap',
-                    'country' => 'flag'
-                ],[
-                    'brand' => BCM_BRAND,
-                    'type' => BCM_TYPE,
-                    'country' => BCM_COUNTRY
-                ]),
-                self::generateBannerGroupForm('Cxense Persisted Query Id','bcm',[
-                    'cxense' => 'code',
+                    'country' => 'flag',
                     'sub' => 'sitemap',
-                ],[
-                    'cxense' => BCM_CXENSE_PERSISTED_QUERY_ID,
-                    'sub' => BCM_SUB
                 ]),
-                self::generateBannerGroupForm('Mobile Breakpoints','breakpoint', [
-                    'mobile' => 'mobile',
-                    'tablet' => 'tablet',
+                self::generateBannerGroupForm('Cxense Persisted Query Id','cxense',[
+                    'persisted-query-id' => 'code',
+                ]),
+                self::generateBannerGroupForm('Mobile Breakpoints','bcm', [
+                    'mobile-breakpoint' => 'mobile',
+                    'tablet-breakpoint' => 'tablet',
                 ],[
-                    'mobile' => BCM_MOBILE_BREAKPOINT,
-                    'tablet' => BCM_TABLET_BREAKPOINT
+                    'mobile-breakpoint' => self::BCM_MOBILE_BREAKPOINT,
+                    'tablet-breakpoint' => self::BCM_TABLET_BREAKPOINT
                 ])
             ]
         ]);
@@ -394,17 +375,17 @@ class BannerPlugin{
                     'layer-slug' => 'code',
                     'layer2-slug' => 'code',
                 ], [
-                    'hook' => BCM_WALLPAPER_AND_LAYER_HOOK,
-                    'slug' => BCM_WALLPAPER_BANNER_SLUG,
-                    'layer-slug' => BCM_LAYER_BANNER_SLUG,
-                    'layer2-slug' => BCM_LAYER2_BANNER_SLUG
+                    'hook' => self::BCM_WALLPAPER_AND_LAYER_HOOK,
+                    'slug' => self::BCM_WALLPAPER_BANNER_SLUG,
+                    'layer-slug' => self::BCM_LAYER_BANNER_SLUG,
+                    'layer2-slug' => self::BCM_LAYER2_BANNER_SLUG
                 ]),
                 self::generateBannerGroupForm('Body open theme hook (Wallpaper open tag)','body',[
                     'open-hook' => 'code-fork',
                     'close-hook' => 'code-fork'
                 ],[
-                    'open-hook' => BCM_BODY_OPEN_HOOK,
-                    'close-hook' => BCM_BODY_CLOSE_HOOK
+                    'open-hook' => self::BCM_BODY_OPEN_HOOK,
+                    'close-hook' => self::BCM_BODY_CLOSE_HOOK
                 ]),
             ]
         ]);
@@ -415,12 +396,12 @@ class BannerPlugin{
                 self::generateBannerGroupForm('Middle Banner Hook','middle',[
                     'theme-hook' => 'code-fork',
                 ],[
-                    'theme-hook' => HOOK_DEFAULT_MIDDLE
+                    'theme-hook' => self::HOOK_DEFAULT_MIDDLE
                 ]),
                 self::generateBannerGroupForm('Middle Banner Slug','middle',[
                     'banner-slug' => 'code',
                 ],[
-                    'banner-slug' => BCM_MIDDLE_BANNER_SLUG
+                    'banner-slug' => self::BCM_MIDDLE_BANNER_SLUG
                 ])
             ]
         ]);
@@ -431,12 +412,12 @@ class BannerPlugin{
                 self::generateBannerGroupForm('#2 Middle Banner Hook','second-middle',[
                     'theme-hook' => 'code-fork',
                 ],[
-                    'theme-hook' => HOOK_DEFAULT_SECOND_MIDDLE
+                    'theme-hook' => self::HOOK_DEFAULT_SECOND_MIDDLE
                 ]),
                 self::generateBannerGroupForm('#2 Middle Banner Slug','second-middle',[
                     'banner-slug' => 'code',
                 ],[
-                    'banner-slug' => BCM_SECOND_MIDDLE_BANNER_SLUG
+                    'banner-slug' => self::BCM_SECOND_MIDDLE_BANNER_SLUG
                 ])
             ]
         ]);
@@ -447,12 +428,12 @@ class BannerPlugin{
                 self::generateBannerGroupForm('Footer Banner Hook','Footer',[
                     'theme-hook' => 'code-fork',
                 ],[
-                    'theme-hook' => HOOK_DEFAULT_FOOTER
+                    'theme-hook' => self::HOOK_DEFAULT_FOOTER
                 ]),
                 self::generateBannerGroupForm('Footer Banner Slug','Footer',[
                     'banner-slug' => 'code',
                 ],[
-                    'banner-slug' => BCM_FOOTER_BANNER_SLUG
+                    'banner-slug' => self::BCM_FOOTER_BANNER_SLUG
                 ])
             ]
         ]);
@@ -463,12 +444,12 @@ class BannerPlugin{
                 self::generateBannerGroupForm('Above Comments Hook','comments',[
                     'theme-hook' => 'code-fork',
                 ],[
-                    'theme-hook' => HOOK_DEFAULT_ABOVE_COMMENTS
+                    'theme-hook' => self::HOOK_DEFAULT_ABOVE_COMMENTS
                 ]),
                 self::generateBannerGroupForm('Above Comments Banners','comments',[
                     'banner-slug' => 'code',
                 ],[
-                    'banner-slug' => BCM_ABOVE_COMMENTS_BANNER_SLUG
+                    'banner-slug' => self::BCM_ABOVE_COMMENTS_BANNER_SLUG
                 ])
             ]
         ]);
