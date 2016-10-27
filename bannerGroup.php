@@ -36,22 +36,24 @@ Class BannerGroup
 
                 $horseshoe =
                     "
-                    <div class='horseshoe' data-banner-horseshoe>
-                      <div class='horseshoe-container'>
-                        <div class='side-banner banner-left visible-md-lg' data-banner-md-lg>
-                          $left
-                          $leftSticky
-                        </div>
+                    <div class='bonnier-wrapper'>
+                        <div class='horseshoe' data-banner-horseshoe>
+                          <div class='horseshoe-container'>
+                            <div class='side-banner banner-left'>
+                              $left
+                              $leftSticky
+                            </div>
 
-                        <div class='top-banner' data-top-banner>
-                          $headerBanners
-                        </div>
+                            <div class='top-banner' data-top-banner>
+                              $headerBanners
+                            </div>
 
-                        <div class='side-banner banner-right visible-md-lg' data-banner-md-lg>
-                          $right
-                          $rightSticky
+                            <div class='side-banner banner-right'>
+                              $right
+                              $rightSticky
+                            </div>
+                          </div>
                         </div>
-                      </div>
                     </div>";
                 return $horseshoe;
             }
