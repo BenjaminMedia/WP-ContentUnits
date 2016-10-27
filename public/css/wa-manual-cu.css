@@ -4,12 +4,12 @@
     text-align:center;
 }
 
-#footer-banners .banner {
+#footer-banners .bonnier-ad {
     margin-left: auto;
     margin-right: auto;
 }
 
-.bonnier-wrapper .banner {
+.bonnier-wrapper .bonnier-ad {
     z-index: 10;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -27,7 +27,7 @@
     text-align: center;
 }
 
-.bonnier-wrapper .horseshoe .top-banner .banner > div
+.bonnier-wrapper .horseshoe .top-banner .bonnier-ad > div
 {
     margin: 0 auto;
 }
@@ -37,7 +37,7 @@
     top: 0;
 }
 
-.bonnier-wrapper .banner img {
+.bonnier-wrapper .bonnier-ad img {
     max-width: 100%;
 }
 
@@ -57,7 +57,7 @@
     width: 160px;
 }
 
-.bonnier-wrapper .gallery-horizontal .banner-min-height {
+.bonnier-wrapper .gallery-horizontal .bonnier-ad-min-height {
     min-height: 300px;
 }
 
@@ -80,19 +80,19 @@
     position: absolute;
 }
 
-.bonnier-wrapper .left, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.banner-left {
+.bonnier-wrapper .left, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-left {
     left: 0;
 }
 
-.bonnier-wrapper .right, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.banner-right {
+.bonnier-wrapper .right, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-right {
     right: 0;
 }
 
-.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.banner-right {
+.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-right {
     margin-right: -160px;
 }
 
-.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.banner-left {
+.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-left {
     margin-left: -160px;
 }
 
@@ -205,12 +205,12 @@
 .bonnier-banner-container  {
     position: relative;
 }
-.bonnier-banner-container .banner.fixed {
+.bonnier-banner-container .bonnier-ad.fixed {
     top: 0px;
     position: fixed;
 }
 
-.bonnier-banner-container .banner.max {
+.bonnier-banner-container .bonnier-ad.max {
     position: absolute;
     bottom: 0;
 }
@@ -227,13 +227,13 @@
     position: relative;
 }
 
-.bonnier-banner-container.sticky .banner
+.bonnier-banner-container.sticky .bonnier-ad
 {
     position: absolute;
     top: 700px;
 }
 
-.bonnier-banner-container.sticky .banner.fixed
+.bonnier-banner-container.sticky .bonnier-ad.fixed
 {
     position: fixed;
     top: 0;

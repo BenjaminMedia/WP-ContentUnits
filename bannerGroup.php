@@ -27,7 +27,7 @@ Class BannerGroup
                 $horseshoe = '';
                 $headerBanners = '';
                 foreach ($contentUnits['banners'] as $breakpoint => $cu) {
-                    $headerBanners .= Banner::htmlCodeFromProps($cu, $breakpoint, 'banner');
+                    $headerBanners .= Banner::htmlCodeFromProps($cu, $breakpoint, 'banner', false);
                 }
                 $left = Banner::htmlCodeFromProps($contentUnits['left']['side'], null, 'sidebanner', false);
                 $leftSticky = Banner::htmlCodeFromProps($contentUnits['left']['sticky'], null, 'sidebanner', true);

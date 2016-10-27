@@ -37,7 +37,8 @@ class Banner
     private function createBannerCode($cu, $breakpoint, $type, $sticky= false, $offset = 0)
     {
         if (isset($type, $this->bannerTypes)) {
-            return "<div class='bonnier-ad' data-ad-position=\"$cu\" >
+            $stickyAttributes = ($sticky)?'data-listen="sticky-banner"':'';
+            return "<div class='bonnier-ad' data-ad-position=\"$cu\" $stickyAttributes >
                 </div>";
         }
         return null;

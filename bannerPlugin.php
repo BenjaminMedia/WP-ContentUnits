@@ -112,6 +112,7 @@ class BannerPlugin {
                 add_action($this->getOptionOrDefault('wallpaper-hook', $this->getOptionOrDefault('theme-hook-second-middle', self::BCM_WALLPAPER_AND_LAYER_HOOK)), array($this,'wallpaperAndLayerBanners'));
                 add_action('wp_enqueue_scripts', function() {
                     wp_enqueue_style('wa-manual-cu-css', $this->getPublicFolder() . '/css/wa-manual-cu.css');
+                    wp_enqueue_script('wa-manual-cu-js', $this->getPublicFolder() . '/js/wa-manual-cu.js');
                     wp_enqueue_script('bcm-script', 'https://bcm.interactives.dk/script/'.$this->headMetaTags['bcm-country'].'/'.$this->headMetaTags['bcm-brand'].'/'.$this->headMetaTags['bcm-type'], array(), true, true);
                 }, 999);
             }
