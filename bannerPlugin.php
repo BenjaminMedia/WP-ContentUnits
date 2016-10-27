@@ -246,7 +246,6 @@ class BannerPlugin {
             if( ($this->postCount == $postOffset) && ($maxPostsPerPage >= $this->postCount) ) {
                 if($this->isExternalHeaderActive && $this->externalShell->showShellBanners()){
                     print_r($this->externalShell->getBanners());
-                    dump('shell');
                 }
                 else {
                     echo BannerGroup::htmlCodeFromProps('Middle Banners',
@@ -255,7 +254,6 @@ class BannerPlugin {
                                 'lg'=> $secondMiddleBannerSlug,
                             ]
                         ],'banner_group');
-                    dump('not shell');
                 }
             }
         }
