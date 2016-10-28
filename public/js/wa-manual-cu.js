@@ -1,65 +1,73 @@
-(function( $ ) {
-    $(function() {
-        var defaultOffsets = [];
-        var maxScrolls = [];
+/*
+ This script makes sure that side banners in the middle of the page
+ become fixed when scrolled into view, and reset when scrolled to top
+ (to avoid clashing with the horseshoe banners).
+ */
+var StickyBanner;
 
-        $.stickybanners = function(elements) {
-            $.each(elements, function() {
-                var container = $($(this).data('container'));
-                var offset = ((($(this).data('offset') && $(this).data('offset') > 0)) ? $(this).data('offset') : $(this).offset().top);
+StickyBanner = (function() {
 
-                defaultOffsets.push(offset);
+    $ = jQuery;
+    var MAX_DOC_HEIGHT, MIN_DOC_HEIGHT;
 
-                var max = 0;
-                var container = $(this).data('container');
-                if(container != '') {
-                    container = $(container);
-                    if(container.length > 0) {
-                        max = (container.offset().top + container.outerHeight()) - $(this).outerHeight();
-                    }
-                }
+    MAX_DOC_HEIGHT = 2200;
 
-                maxScrolls.push(max);
-            });
+    MIN_DOC_HEIGHT = 800;
 
-            var checkBanner = function() {
-                elements.each(function(i) {
-                    var el = $(this);
-                    var defaultOffset = defaultOffsets[i];
-                    var maxScroll = maxScrolls[i];
-
-                    if(maxScroll > 0) {
-                        if($(window).scrollTop() > maxScroll && !el.hasClass('max')) {
-                            el.removeClass('fixed').addClass('max');
-                        }
-
-                        if($(window).scrollTop() < maxScroll && el.hasClass('max')) {
-                            el.removeClass('max');
-                        }
-                    }
-
-                    if($(window).scrollTop() < defaultOffset && el.hasClass('fixed')) {
-                        el.removeClass('fixed');
-                    }
-
-                    if($(window).scrollTop() > defaultOffset && !el.hasClass('fixed') && !el.hasClass('max')) {
-                        el.addClass('fixed');
-                    }
-                });
+    function StickyBanner() {
+        $(document).on('ready', (function(_this) {
+            return function() {
+                return _this.init();
             };
+        })(this));
+        $(document).on('scroll', (function(_this) {
+            return function() {
+                if (_this.initialized) {
+                    return _this.onScroll();
+                }
+            };
+        })(this));
+    }
 
-            $(document).off('scroll.stickybanners').on('scroll.stickybanners', function() {
-                checkBanner();
-            });
+    StickyBanner.prototype.init = function() {
+        this.banner = $('[data-listen="sticky-banner"]');
+        return this.initialized = true;
+    };
 
-            // Initialize so it displays banners when offset < scroll
-            checkBanner();
-        };
+    StickyBanner.prototype.onScroll = function() {
+        var docHeight;
+        docHeight = $(document).height();
+        console.log(this.banner.length);
+        if (this.banner.children.length && docHeight > MAX_DOC_HEIGHT) {
+            return this.stickyBanner();
+        } else {
+            return this.banner.hide();
+        }
+    };
 
-        $.stickybanners($('[data-listen="sticky-banner"]'));
+    StickyBanner.prototype.stickyBanner = function() {
+        if (this.isScrolledIntoView(this.banner)) {
+            this.banner.removeClass('static');
+            console.log('static');
+        }
+        if (this.banner.offset().top < MIN_DOC_HEIGHT) {
+            return this.banner.fadeOut('slow', (function(_this) {
+                return function() {
+                    return _this.banner.addClass('static').fadeIn().css('top', 0);
+                };
+            })(this));
+        }
+    };
 
-        $(window).off('resize.stickybanners').on('resize.stickybanners', function() {
-            $.stickybanners($('[data-listen="sticky-banner"]'));
-        });
-    });
-})(jQuery);
+    StickyBanner.prototype.isScrolledIntoView = function(elem) {
+        var docViewTop, elemTop;
+        docViewTop = $(window).scrollTop();
+        elemTop = $(elem).offset().top;
+        return elemTop < docViewTop;
+    };
+
+    return StickyBanner;
+
+})();
+
+window.StickyBanner = new StickyBanner();
