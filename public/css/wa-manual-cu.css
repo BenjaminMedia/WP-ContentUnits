@@ -80,19 +80,19 @@
     position: absolute;
 }
 
-.bonnier-wrapper .left, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-left {
+.bonnier-wrapper .left, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .banner-left {
     left: 0;
 }
 
-.bonnier-wrapper .right, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-right {
+.bonnier-wrapper .right, .bonnier-wrapper .modal .close, .bonnier-wrapper .horseshoe .horseshoe-container .banner-right {
     right: 0;
 }
 
-.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-right {
+.bonnier-wrapper .horseshoe .horseshoe-container .banner-right {
     margin-right: -160px;
 }
 
-.bonnier-wrapper .horseshoe .horseshoe-container .side-banner.bonnier-ad-left {
+.bonnier-wrapper .horseshoe .horseshoe-container .banner-left {
     margin-left: -160px;
 }
 
